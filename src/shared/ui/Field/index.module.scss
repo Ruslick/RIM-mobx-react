@@ -1,0 +1,9 @@
+.link {
+  transition: color 0.1s ease-in-out;
+  text-decoration: none;
+  color: var(--mantine-color-green-2);
+
+  &:hover {
+    color: var(--mantine-color-green-4);
+  }
+}

@@ -1,0 +1,7 @@
+.scrollTopButton {
+  position: fixed;
+  bottom: calc(var(--footer-height) + var(--mantine-spacing-lg));
+  right: 20px;
+  border-radius: var(--mantine-radius-xl);
+  z-index: var(--mantine-z-index-app);
+}

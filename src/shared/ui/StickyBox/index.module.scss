@@ -1,0 +1,10 @@
+.sticky {
+  position: sticky;
+  z-index: var(--mantine-z-index-modal);
+  top: calc(var(--header-height) + var(--mantine-spacing-md));
+
+  &[data-bottom="true"] {
+    top: initial;
+    bottom: calc(var(--footer-height) + var(--mantine-spacing-md));
+  }
+}
