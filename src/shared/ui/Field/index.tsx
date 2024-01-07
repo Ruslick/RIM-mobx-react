@@ -1,17 +1,18 @@
 import { PATHS } from "@/shared/constants/pages";
 import { Anchor, Divider, Stack, Text } from "@mantine/core";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import s from "./index.module.scss";
 
 interface FieldProps {
-  text: string;
+  text?: string | ReactNode;
   path?: PATHS;
   id?: string;
   label: string;
+  children?: ReactNode;
 }
 
-export const Field: FC<FieldProps> = ({ text, path, label, id }) => {
+export const Field: FC<FieldProps> = ({ text, path, label, id, children }) => {
   const link = path && id ? path + id : "";
 
   const linkComponent = (
@@ -19,13 +20,13 @@ export const Field: FC<FieldProps> = ({ text, path, label, id }) => {
       {text}
     </Anchor>
   );
-
-  const textComponent = <Text c={"white"}> {text}</Text>;
+  const textComponent = text && <Text c={"white"}> {text}</Text>;
 
   return (
     <Stack gap={0}>
       <Text c={"dimmed"}>{label}</Text>
       {link ? linkComponent : textComponent}
+      {children}
       <Divider />
     </Stack>
   );

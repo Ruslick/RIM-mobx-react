@@ -7,14 +7,11 @@ import { FC } from "react";
 export const LocationsPage: FC = observer(() => {
   const locationsStore = entitiesStores.locations;
 
-  const cards = locationsStore.data?.map((location) => {
+  const cards = locationsStore.collection.map((location) => {
     return <LocationCard key={location.id} {...location} />;
   });
 
   return (
-    <TemplateEntitiesPage
-      store={locationsStore}
-      children={cards}
-    ></TemplateEntitiesPage>
+    <TemplateEntitiesPage store={locationsStore}>{cards}</TemplateEntitiesPage>
   );
 });

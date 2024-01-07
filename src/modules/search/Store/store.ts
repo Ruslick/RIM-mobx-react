@@ -18,7 +18,7 @@ export class SearchStore {
     reaction(
       () => this.urlParams,
       () => {
-        this.rootStore.reGetEntities(this.urlParams);
+        this.rootStore.getEntities(this.urlParams);
       },
       { delay: 1000 }
     );

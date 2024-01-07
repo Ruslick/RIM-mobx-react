@@ -1,19 +1,16 @@
 import { PATHS } from "@/shared/constants/pages";
 import { ejectId } from "@/shared/libs/eject-id";
 import { Episode } from "@/shared/types/episodeDTO";
-import { Badge, Group, Paper, Stack, Title } from "@mantine/core";
+import { Anchor, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { FC } from "react";
 import { Field } from "../../Field";
+import React from "react";
 
 export const EpisodeProfile: FC<Episode> = (props) => {
   const characters = props.characters.map((url) => (
-    <Field
-      key={url}
-      text={"Link"}
-      label={"Character id: " + ejectId(url)}
-      path={PATHS.CHARACTERS}
-      id={ejectId(url)}
-    />
+    <React.Fragment key={url}>
+      <Anchor href={PATHS.CHARACTERS + ejectId(url)}>{ejectId(url)},</Anchor>{" "}
+    </React.Fragment>
   ));
 
   return (
@@ -21,13 +18,17 @@ export const EpisodeProfile: FC<Episode> = (props) => {
       <Paper>
         <Group>
           <Title order={1}>{props.name}</Title>
-          <Badge size="lg">{props.episode}</Badge>
         </Group>
-        <Title order={4}>Air Date: {props.air_date}</Title>
       </Paper>
       <Paper>
-        <Title order={1}>List of characters</Title>
-        <Stack>{characters}</Stack>
+        <Stack>
+          <Field text={props.id} label={"Id"} />
+          <Field text={props.episode} label={"Episode:"} />
+          <Field text={props.air_date} label={"Air Date:"} />
+          <Field label={"List of residents:"}>
+            <Text>{characters}</Text>
+          </Field>
+        </Stack>
       </Paper>
     </Stack>
   );

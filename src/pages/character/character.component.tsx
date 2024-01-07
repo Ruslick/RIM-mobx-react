@@ -10,7 +10,8 @@ export const CharacterPage: FC = observer(() => {
   const id = useParams().id!;
   useEffect(() => {
     store.fetchGet(id);
-  });
+  }, []);
+  
   return store.data?.case({
     pending: () => <Loader />,
     rejected: () => <Navigate to={"/404"} />,

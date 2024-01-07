@@ -1,45 +1,77 @@
 import { SearchStore } from "@/modules/search/Store/store";
-import { API, Status } from "@/shared/constants/api";
-import { Api } from "@/shared/libs/api";
+import { API } from "@/shared/constants/api";
+import { fetch } from "@/shared/libs/api";
 import { ejectId } from "@/shared/libs/eject-id";
 import { PaginatedData } from "@/shared/types/api";
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import {
+  makeAutoObservable,
+  reaction,
+  when
+} from "mobx";
+import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
 
 export class EntitiesStore<T> {
-  data?: T[];
-  api: Api<PaginatedData<T>>;
+  collection: T[] = [];
   searchStore: SearchStore;
+  data?: IPromiseBasedObservable<PaginatedData<T[]>>;
 
-  constructor(urlApi: API, searchParams: string[]) {
+  constructor(private readonly urlApi: API, searchParams: string[]) {
     makeAutoObservable(this);
-    this.api = new Api(urlApi);
     this.searchStore = new SearchStore(this, searchParams);
+
+    reaction(
+      () => this.data?.state === "rejected",
+      () => {
+        this.collection = [];
+      }
+    );
   }
 
   async getEntities(params?: URLSearchParams) {
-    if (this.api.status !== Status.idle) return;
-    await this.api.fetch({ params });
-    runInAction(() => {
-      this.data = this.api.data?.results;
-    });
-  }
+    if (this.data?.state === "pending") return;
 
-  async reGetEntities(params?: URLSearchParams) {
-    this.api.reset();
-    this.getEntities(params);
+    this.data = fromPromise(
+      fetch<PaginatedData<T[]>>({ url: this.urlApi, params })
+    );
+    when(
+      () => this.data?.state !== "pending",
+      () => {
+        this.data?.case({
+          fulfilled: (data) => {
+            this.collection = data.results;
+          },
+        });
+      }
+    );
   }
 
   async loadNextPage() {
-    const nextPage = ejectId(this.api?.data?.info?.next);
+    const nextPage = ejectId(
+      (this.data?.value as PaginatedData<T[]>)?.info?.next
+    );
 
-    if (this.api.status !== Status.success || !nextPage) return;
+    if (this.data?.state !== "fulfilled" || !nextPage) return;
 
-    await this.api.fetch({
-      params: new URLSearchParams({ page: nextPage }),
-    });
-    runInAction(() => {
-      console.log(toJS(this.api.data?.results));
-      this.data = [...(this.data || []), ...(this.api.data?.results || [])];
-    });
+    const params = this.searchStore.urlParams;
+
+    params.set("page", nextPage);
+
+    this.data = fromPromise(
+      fetch<PaginatedData<T[]>>({
+        url: this.urlApi,
+        params,
+      })
+    );
+
+    when(
+      () => this.data?.state !== "pending",
+      () => {
+        this.data?.case({
+          fulfilled: (data) => {
+            this.collection.push(...data.results);
+          },
+        });
+      }
+    );
   }
 }

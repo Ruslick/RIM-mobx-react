@@ -7,5 +7,5 @@ export interface PaginatedInfo {
 
 export interface PaginatedData<Data> {
   info: PaginatedInfo;
-  results: Data[];
+  results: Data;
 }

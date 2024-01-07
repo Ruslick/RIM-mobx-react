@@ -7,7 +7,6 @@ export const searchFilters = {
   ],
   episode: [
     { label: "Name", value: "name" },
-    { label: "Air Date", value: "air_date" },
     { label: "Episode", value: "episode" },
   ],
   location: [

@@ -1,21 +1,17 @@
+import { PATHS } from "@/shared/constants/pages";
 import { Location } from "@/shared/types/locationDTO";
-import { Badge, Card, Group, Stack, Title } from "@mantine/core";
-import { IconCalendar, IconEye } from "@tabler/icons-react";
+import { Card, Group, Stack, Text, Title } from "@mantine/core";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 export const LocationCard: FC<Location> = (props) => {
   return (
-    <Card shadow="sm">
-      <Stack>
-        <Title order={4}>{props.name}</Title>
+    <Card shadow="sm" component={Link} to={PATHS.LOCATIONS + props.id}>
+      <Stack gap={0}>
         <Group>
-          <Badge bg={"dark.4"} leftSection={<IconCalendar size={15} />}>
-            {props.dimension}
-          </Badge>
-          <Badge bg={"dark.4"} leftSection={<IconEye size={15} />}>
-            {props.type}
-          </Badge>
+          <Text c={"dimmed"}>id: {props.id}</Text>
         </Group>
+        <Title order={2}>{props.name}</Title>
       </Stack>
     </Card>
   );

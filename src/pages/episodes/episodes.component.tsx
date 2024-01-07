@@ -6,7 +6,7 @@ import { FC } from "react";
 
 export const EpisodesPage: FC = observer(() => {
   const episodesStore = entitiesStores.episodes;
-  const cards = episodesStore.data?.map((episode) => {
+  const cards = episodesStore.collection?.map((episode) => {
     return <EpisodeCard key={episode.id} {...episode} />;
   });
 

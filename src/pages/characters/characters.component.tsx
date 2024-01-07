@@ -6,7 +6,7 @@ import { FC } from "react";
 
 export const CharactersPage: FC = observer(() => {
   const charsStore = entitiesStores.characters;
-  const cards = charsStore.data?.map((character) => {
+  const cards = charsStore.collection?.map((character) => {
     return <CharacterCard key={character.id} {...character} />;
   });
 

@@ -12,6 +12,7 @@ const navbarList = [
 export const Navbar: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   return (
     <AppShell.Navbar bg={"dark.8"}>
       <Stack p={"md"}>
@@ -20,7 +21,7 @@ export const Navbar: FC = () => {
         </Title>
         <SegmentedControl
           bg={"dark.6"}
-          defaultValue={location.pathname}
+          defaultValue={"/" + location.pathname.split("/")[1] + "/"}
           size="lg"
           data={navbarList}
           orientation="vertical"
